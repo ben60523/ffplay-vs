@@ -1,3 +1,6 @@
 ffplay/Debug/
+ffplay/ffplay.vcxproj.user
 *.xml
 *.sdf
+Debug/
+.vs/

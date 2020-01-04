@@ -20,13 +20,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -42,7 +42,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\..\include\sdl;$(ProjectDir)\..\include\ffmpeg;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)sdl2\include;$(SolutionDir)ffmpeg\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(ProjectDir)\..\lib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -62,7 +62,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>avcodec.lib;avdevice.lib;avfilter.lib;avformat.lib;avutil.lib;postproc.lib;SDL.lib;SDLmain.lib;swresample.lib;swscale.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Ws2_32.lib;Secur32.lib;$(SolutionDir)sdl2\lib\SDL2d.lib;$(SolutionDir)sdl2\lib\SDL2maind.lib;$(SolutionDir)ffmpeg\lib\avcodec.lib;$(SolutionDir)ffmpeg\lib\avdevice.lib;$(SolutionDir)ffmpeg\lib\avfilter.lib;$(SolutionDir)ffmpeg\lib\avformat.lib;$(SolutionDir)ffmpeg\lib\avresample.lib;$(SolutionDir)ffmpeg\lib\avutil.lib;$(SolutionDir)ffmpeg\lib\bcrypt.lib;$(SolutionDir)ffmpeg\lib\postproc.lib;$(SolutionDir)ffmpeg\lib\swresample.lib;$(SolutionDir)ffmpeg\lib\swscale.lib;$(SolutionDir)ffmpeg\lib\zlib.lib;$(SolutionDir)ffmpeg\lib\zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
