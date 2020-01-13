@@ -28,7 +28,8 @@
 #include <math.h>
 #include <limits.h>
 #include <signal.h>
-#include <stdint.h>
+#include <conio.h>
+#include <WTypesbase.h>
 
 #include "libavutil/avstring.h"
 #include "libavutil/eval.h"
@@ -338,6 +339,8 @@ static int autoexit;
 static int exit_on_keydown;
 static int exit_on_mousedown;
 static void event_loop(VideoState* is);
+static void stop_stream(VideoState* is);
+static void reopen_stream();
 static int loop = 1;
 static int framedrop = -1;
 static int infinite_buffer = -1;
@@ -1600,6 +1603,15 @@ static void update_video_pts(VideoState* is, double pts, int64_t pos, int serial
 static void video_refresh(void* opaque, double* remaining_time)
 {
 	VideoState* is = opaque;
+	int ch = read_key();
+	if (ch == 'o' || ch == 'O') {
+		stop_stream(is);
+	}
+	else if (ch == 'i' || ch == 'I')
+	{
+		reopen_stream();
+	}
+
 	double time;
 
 	Frame* sp, * sp2;
@@ -3329,7 +3341,6 @@ static void reopen_stream()
 		av_log(NULL, AV_LOG_FATAL, "Failed to initialize VideoState!\n");
 		do_exit(NULL);
 	}
-	SDL_Event event;
 
 	event_loop(is);
 }
@@ -3347,13 +3358,43 @@ static void stop_stream(VideoState* is)
 	avformat_close_input(&is->ic);
 }
 
+static int read_key() {
+	unsigned char ch;
+	static int is_pipe;
+	static HANDLE input_handle;
+	DWORD dw, nchars;
+	if (!input_handle) {
+		input_handle = GetStdHandle(STD_INPUT_HANDLE);
+		is_pipe = !GetConsoleMode(input_handle, &dw);
+	}
+
+	if (is_pipe) {
+		/* When running under a GUI, you will end here. */
+		if (!PeekNamedPipe(input_handle, NULL, 0, NULL, &nchars, NULL)) {
+			// input pipe may have been closed by the program that ran ffmpeg
+			return -1;
+		}
+		//Read it
+		if (nchars != 0) {
+			read(0, &ch, 1);
+			return ch;
+		}
+		else {
+			return -1;
+		}
+	}
+	if (kbhit())
+		return(getch());
+}
+
+
 /* handle an event sent by the GUI */
 static void event_loop(VideoState* cur_stream)
 {
 	SDL_Event event;
 	double incr, pos, frac;
 	int ready_to_quit = 0;
-
+	int ch;
 	for (;;) {
 		double x;
 		refresh_loop_wait_event(cur_stream, &event);
@@ -3556,7 +3597,8 @@ static void event_loop(VideoState* cur_stream)
 			break;
 		case SDL_QUIT:
 		case FF_QUIT_EVENT:
-			if (++ready_to_quit > 9) do_exit(cur_stream);
+			//if (++ready_to_quit > 9) 
+			do_exit(cur_stream);
 			break;
 		default:
 			break;
@@ -3871,4 +3913,4 @@ int main(int argc, char** argv)
 	/* never returns */
 
 	return 0;
-	}
+}
